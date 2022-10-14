@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "180332024388",
+    "project_id": "rave-events-4622d",
+    "storage_bucket": "rave-events-4622d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:180332024388:android:ce6017dc989d585b266211",
+        "android_client_info": {
+          "package_name": "com.example.rave_events"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "180332024388-sk8t0bh32k9lpumtq51e5e7omadua6re.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBThUkvcAyUPsMDN9YD35A1sSo0ewFXx0Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "180332024388-sk8t0bh32k9lpumtq51e5e7omadua6re.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

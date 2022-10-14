@@ -1,0 +1,42 @@
+[
+    {
+        "placeImage": "assets/images/concert1.jpg",
+        "placeName": "Concert 1",
+        "placeLocation": "venue 1"
+    },
+    {
+        "placeImage": "assets/images/concert2.jpg",
+        "placeName": "Concert 2",
+        "placeLocation": "venue 2"
+    },
+    {
+        "placeImage": "assets/images/concert3.jpg",
+        "placeName": "Concert 3",
+        "placeLocation": "venue 3"
+    },
+    {
+        "placeImage": "assets/images/concert4.jpg",
+        "placeName": "Concert 4",
+        "placeLocation": "venue 4"
+    },
+    {
+        "placeImage": "assets/images/concert5.jpg",
+        "placeName": "Concert 5",
+        "placeLocation": "venue 5"
+    },
+    {
+        "placeImage": "assets/images/concert6.jpg",
+        "placeName": "Concert 6",
+        "placeLocation": "venue 6"
+    },
+    {
+        "placeImage": "assets/images/concert7.jpg",
+        "placeName": "Concert 7",
+        "placeLocation": "venue 7"
+    },
+    {
+        "placeImage": "assets/images/concert8.jpg",
+        "placeName": "Concert 8",
+        "placeLocation": "venue 8"
+    }
+]
