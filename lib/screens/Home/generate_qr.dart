@@ -13,30 +13,6 @@ class QrCodeScanner extends StatelessWidget {
   QrCodeScanner({super.key, required this.paymentDetails});
   final qrKey = GlobalKey();
 
-  void takeScreenShot() async {
-    PermissionStatus res;
-    res = await Permission.storage.request();
-    if (res.isGranted) {
-      final boundary =
-          qrKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
-      // We can increse the size of QR using pixel ratio
-      final image = await boundary.toImage(pixelRatio: 5.0);
-      final byteData = await (image.toByteData(format: ui.ImageByteFormat.png));
-      if (byteData != null) {
-        final pngBytes = byteData.buffer.asUint8List();
-        // getting directory of our phone
-        final directory = (await getApplicationDocumentsDirectory()).path;
-        final imgFile = File(
-          '$directory/${DateTime.now()}.png',
-        );
-        imgFile.writeAsBytes(pngBytes);
-        GallerySaver.saveImage(imgFile.path).then((success) async {
-          //In here you can show snackbar or do something in the backend at successfull download
-        });
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final qrData = paymentDetails;
@@ -50,19 +26,61 @@ class QrCodeScanner extends StatelessWidget {
             Center(
               child: RepaintBoundary(
                 key: qrKey,
-                child: QrImage(
-                  data: encodedJson,
-                  size: 250,
-                  backgroundColor: Colors.white,
-                  version: QrVersions.auto,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 20.0, horizontal: 60.0),
+                  child: Column(
+                    children: [
+                      Text(
+                        '${paymentDetails['event']}',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      QrImage(
+                        data: encodedJson,
+                        size: 250,
+                        backgroundColor: Colors.white,
+                        version: QrVersions.auto,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
             const SizedBox(height: 25),
             ElevatedButton(
-              child: const Text('Save to Gallery'),
-              onPressed: takeScreenShot,
-            ),
+                child: const Text('Save to Gallery'),
+                onPressed: () async {
+                  PermissionStatus res;
+                  res = await Permission.storage.request();
+                  if (res.isGranted) {
+                    final boundary = qrKey.currentContext!.findRenderObject()
+                        as RenderRepaintBoundary;
+                    // We can increse the size of QR using pixel ratio
+                    final image = await boundary.toImage(pixelRatio: 5.0);
+                    final byteData = await (image.toByteData(
+                        format: ui.ImageByteFormat.png));
+                    if (byteData != null) {
+                      final pngBytes = byteData.buffer.asUint8List();
+                      // getting directory of our phone
+                      final directory =
+                          (await getApplicationDocumentsDirectory()).path;
+                      final imgFile = File(
+                        '$directory/${DateTime.now()}.png',
+                      );
+                      imgFile.writeAsBytes(pngBytes);
+                      GallerySaver.saveImage(imgFile.path)
+                          .then((success) async {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text("Code saved to gallery"),
+                        ));
+                        Navigator.pop(context);
+                      });
+                    }
+                  }
+                }),
             const SizedBox(height: 25)
           ],
         ),

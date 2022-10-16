@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:rave_events/screens/Home/details_page.dart';
 import 'package:rave_events/screens/Home/event_upload_form.dart';
 import 'package:rave_events/screens/Home/saved_events.dart';
+import 'package:rave_events/screens/Home/scan_qr.dart';
 import 'package:rave_events/screens/Home/user_data_update.dart';
 import 'package:rave_events/screens/Home/user_portal.dart';
 import '../../models/user_model.dart';
@@ -55,6 +56,11 @@ class HomeScreen extends StatelessWidget {
               child: const UserDataUpdateForm(),
             );
           });
+    }
+
+    void _pushQrScanner() {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => ScanQrPage()));
     }
 
     return Scaffold(
@@ -108,6 +114,12 @@ class HomeScreen extends StatelessWidget {
                 title: const Text('Update User Data'),
                 onTap: () {
                   _showAdditionalDataForm();
+                }),
+            ListTile(
+                leading: const Icon(Icons.camera_alt),
+                title: const Text('Scan Qr Code'),
+                onTap: () {
+                  _pushQrScanner();
                 }),
           ],
         ),

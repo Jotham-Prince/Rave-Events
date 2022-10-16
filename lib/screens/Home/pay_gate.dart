@@ -117,6 +117,7 @@ class _PaymentClarityState extends State<PaymentClarity> {
                           child: InkWell(
                             onTap: () async {
                               loading = true;
+                              final navigator = Navigator.of(context);
                               final userData = await FirebaseFirestore.instance
                                   .collection('UserData')
                                   .doc(user.uid)
@@ -202,17 +203,33 @@ class _PaymentClarityState extends State<PaymentClarity> {
                                             'name': name,
                                             'profpic': profpic,
                                             'vipStatus': 'Ordinary',
-                                            'event': widget.eventData,
+                                            'event': widget.eventData['name'],
                                           };
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      QrCodeScanner(
-                                                        paymentDetails:
-                                                            paymentDetails,
-                                                      )));
+                                          navigator.push(MaterialPageRoute(
+                                              builder: (_) => QrCodeScanner(
+                                                  paymentDetails:
+                                                      paymentDetails)));
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                            content: Text("${response.data}"),
+                                          ));
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                            content:
+                                                Text("${response.message}"),
+                                          ));
                                         } else {
+                                          Map<String, dynamic> paymentDetails =
+                                              {
+                                            'name': name,
+                                            'profpic': profpic,
+                                            'vipStatus': 'Ordinary',
+                                            'event': widget.eventData['name'],
+                                          };
+                                          navigator.push(MaterialPageRoute(
+                                              builder: (_) => QrCodeScanner(
+                                                  paymentDetails:
+                                                      paymentDetails)));
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(SnackBar(
                                             content:
