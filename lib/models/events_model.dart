@@ -6,9 +6,9 @@ class Event {
   String img;
   String owner;
   String location;
-  String vipSlots;
+  String? vipSlots;
   String ordinarySlots;
-  String vipPrice;
+  String? vipPrice;
   String ordinaryPrice;
 
   Event({
@@ -20,9 +20,9 @@ class Event {
     required this.owner,
     required this.location,
     required this.ordinaryPrice,
-    required this.vipPrice,
+    this.vipPrice,
     required this.ordinarySlots,
-    required this.vipSlots,
+    this.vipSlots,
   });
 
   Map<String, dynamic> toJson() => {
@@ -34,9 +34,9 @@ class Event {
         'owner': owner,
         'location': location,
         'ordinaryPrice': ordinaryPrice,
-        'vipPrice': vipPrice,
+        'vipPrice': vipPrice ?? '',
         'ordinarySlots': ordinarySlots,
-        'vipSlots': vipSlots,
+        'vipSlots': vipSlots ?? '',
       };
 
   /*static Event fromJson(Map<String, dynamic> json) => Event(

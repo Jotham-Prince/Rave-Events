@@ -28,11 +28,11 @@ class UserPortal extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return Scaffold(
-              backgroundColor: Colors.grey[900],
+              backgroundColor: Colors.white,
               appBar: AppBar(
                 title: const Text('User Profile'),
                 centerTitle: true,
-                backgroundColor: Colors.grey[850],
+                backgroundColor: Colors.grey,
                 elevation: 0.0,
                 leading: IconButton(
                     onPressed: () {
@@ -60,7 +60,7 @@ class UserPortal extends StatelessWidget {
                     const Text(
                       'NAME',
                       style: TextStyle(
-                        color: Colors.grey,
+                        color: Colors.black,
                         letterSpacing: 2.0,
                       ),
                     ),
@@ -68,7 +68,7 @@ class UserPortal extends StatelessWidget {
                     Text(
                       snapshot.data!.data()!['name'] ?? 'No name available',
                       style: TextStyle(
-                        color: Colors.amberAccent[200],
+                        color: Color.fromARGB(255, 52, 252, 59),
                         fontWeight: FontWeight.bold,
                         fontSize: 28.0,
                         letterSpacing: 2.0,
@@ -79,7 +79,7 @@ class UserPortal extends StatelessWidget {
                       children: <Widget>[
                         Icon(
                           Icons.email,
-                          color: Colors.grey[400],
+                          color: Colors.black,
                         ),
                         const SizedBox(width: 10.0),
                         Text(
@@ -91,7 +91,7 @@ class UserPortal extends StatelessWidget {
                             }
                           }()),
                           style: TextStyle(
-                            color: Colors.grey[400],
+                            color: Colors.black,
                             fontSize: 18.0,
                             letterSpacing: 1.0,
                           ),
@@ -103,7 +103,7 @@ class UserPortal extends StatelessWidget {
                       height: 50.0,
                       child: Material(
                         borderRadius: BorderRadius.circular(20.0),
-                        color: Color.fromARGB(255, 161, 165, 48),
+                        color: Color.fromARGB(255, 52, 252, 59),
                         elevation: 7.0,
                         child: InkWell(
                           onTap: () async {

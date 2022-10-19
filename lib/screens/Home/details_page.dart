@@ -1,10 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:provider/provider.dart';
 import 'package:rave_events/screens/Home/pay_gate.dart';
 import 'package:rave_events/screens/Home/saved_events.dart';
 // ignore: depend_on_referenced_packages
 import 'package:intl/intl.dart';
 
+import '../../models/user_model.dart';
 import 'google_api_home.dart';
 
 class Details extends StatefulWidget {
@@ -33,13 +36,16 @@ class _DetailsState extends State<Details> {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<CustomUser?>(context);
+    String id = user!.uid;
+
     return Scaffold(
       backgroundColor: Colors.white,
-      body: getBody(),
+      body: getBody(id, widget.eventData),
     );
   }
 
-  Widget getBody() {
+  Widget getBody(String id, Map<String, dynamic> eventData) {
     var size = MediaQuery.of(context).size;
 
     return SingleChildScrollView(
@@ -68,6 +74,16 @@ class _DetailsState extends State<Details> {
                         color: Colors.black),
                     IconButton(
                         onPressed: () {
+                          FirebaseFirestore.instance
+                              .collection('Cart')
+                              .doc(id)
+                              .collection('PersonalCart')
+                              .doc(eventData['name'])
+                              .set(eventData);
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content:
+                                Text("${eventData['name']} added to Bookings"),
+                          ));
                           Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -122,16 +138,27 @@ class _DetailsState extends State<Details> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          'VIP',
+                        Text(
+                          (() {
+                            if (widget.eventData['vipPrice'] == "") {
+                              return "";
+                            } else {
+                              return 'VIP';
+                            }
+                          }()),
                           style: TextStyle(
                               fontSize: 30.0, fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          'UGX ${widget.eventData['vipPrice']}',
-                          style: const TextStyle(
-                              fontSize: 30.0, fontWeight: FontWeight.bold),
-                        )
+                            (() {
+                              if (widget.eventData['vipPrice'] == "") {
+                                return "";
+                              } else {
+                                return 'UGX ${widget.eventData['vipPrice']}';
+                              }
+                            }()),
+                            style: const TextStyle(
+                                fontSize: 30.0, fontWeight: FontWeight.bold)),
                       ],
                     ),
                     Row(

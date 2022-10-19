@@ -8,6 +8,9 @@ import 'dart:io';
 import 'package:flutterwave/flutterwave.dart';
 import 'package:flutterwave/models/responses/charge_response.dart';
 
+import '../../models/seat_model.dart';
+import 'generate_qr.dart';
+
 // ignore: must_be_immutable
 class CustomSeat extends StatefulWidget {
   int index;
@@ -19,12 +22,45 @@ class CustomSeat extends StatefulWidget {
 }
 
 class _CustomSeatState extends State<CustomSeat> {
+  bool availability = true;
+  Color color = Colors.green;
+
+  @override
+  initState() {
+    super.initState();
+    checkFirestore();
+  }
+
+  checkFirestore() async {
+    await asyncChecker();
+  }
+
+  asyncChecker() async {
+    Seat seatInstance = Seat();
+    QuerySnapshot<Map<String, dynamic>> seatCollection = await FirebaseFirestore
+        .instance
+        .collection('Events')
+        .doc('${widget.eventData['id']}')
+        .collection('seats')
+        .get();
+    List<Seat> seats = seatCollection.docs
+        .map((seat) => seatInstance.fromDocumentSnapshot(seat))
+        .toList();
+    for (var seat in seats) {
+      if (seat.seatNo == (widget.index + 1)) {
+        setState(() {
+          availability = false;
+          color = Colors.red;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<CustomUser?>(context);
     String ref = '';
-    bool availability = true;
-    Color color = Colors.green;
+    final navigator = Navigator.of(context);
 
     return FutureBuilder(
         future: FirebaseFirestore.instance
@@ -53,13 +89,11 @@ class _CustomSeatState extends State<CustomSeat> {
                     final email = user.email;
                     final amount = widget.eventData['vipPrice'];
                     if (email!.isEmpty || amount.isEmpty) {
-                      // ignore: use_build_context_synchronously
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         content: Text("Email or Amount Empty"),
                       ));
                     } else {
                       ///Flutter payements
-                      // ignore: use_build_context_synchronously
                       ChargeResponse? response = await _makePayment(
                           context,
                           email.trim(),
@@ -74,24 +108,57 @@ class _CustomSeatState extends State<CustomSeat> {
                           ));
                         } else {
                           if (response.status == "sucess") {
-                            // ignore: use_build_context_synchronously
+                            FirebaseFirestore.instance
+                                .collection('Events')
+                                .doc('${widget.eventData['id']}')
+                                .collection('seats')
+                                .doc()
+                                .set({'number': (widget.index + 1)});
+                            FirebaseFirestore.instance
+                                .collection('Cart')
+                                .doc(user.uid)
+                                .collection('PersonalCart')
+                                .doc(widget.eventData['name'])
+                                .delete();
+                            Map<String, dynamic> paymentDetails = {
+                              'name': snapshot.data!.data()!['name'],
+                              'profpic': snapshot.data!.data()!['profpic'],
+                              'vipStatus': 'Seat ${widget.index + 1}',
+                              'event': widget.eventData['name'],
+                            };
+                            navigator.pushReplacement(MaterialPageRoute(
+                                builder: (_) => QrCodeScanner(
+                                    paymentDetails: paymentDetails)));
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text("${response.data}"),
+                              content: Text(
+                                  "You have successfully aquired seat ${widget.index + 1}"),
                             ));
-                            // ignore: use_build_context_synchronously
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text("${response.message}"),
-                            ));
-                            setState(() {
-                              availability = false;
-                              color = Colors.red;
-                            });
                           } else {
-                            // ignore: use_build_context_synchronously
+                            FirebaseFirestore.instance
+                                .collection('Events')
+                                .doc('${widget.eventData['id']}')
+                                .collection('seats')
+                                .doc()
+                                .set({'number': (widget.index + 1)});
+                            FirebaseFirestore.instance
+                                .collection('Cart')
+                                .doc(user.uid)
+                                .collection('PersonalCart')
+                                .doc(widget.eventData['name'])
+                                .delete();
+                            Map<String, dynamic> paymentDetails = {
+                              'name': snapshot.data!.data()!['name'],
+                              'profpic': snapshot.data!.data()!['profpic'],
+                              'vipStatus': 'Seat ${widget.index + 1}',
+                              'event': widget.eventData['name'],
+                            };
+                            navigator.pushReplacement(MaterialPageRoute(
+                                builder: (_) => QrCodeScanner(
+                                    paymentDetails: paymentDetails)));
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text("${response.message}"),
+                              content: Text(
+                                  "You have successfully aquired seat ${widget.index + 1}"),
                             ));
-                            print(response.message);
                           }
                         }
                       } else {

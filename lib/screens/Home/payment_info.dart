@@ -10,11 +10,11 @@ class DisplayPaymentsInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[900],
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('Customer Info'),
         centerTitle: true,
-        backgroundColor: Colors.grey[850],
+        backgroundColor: Colors.grey,
         elevation: 0.0,
         leading: IconButton(
             onPressed: () {
@@ -42,54 +42,58 @@ class DisplayPaymentsInfo extends StatelessWidget {
             const Text(
               'NAME',
               style: TextStyle(
-                color: Colors.grey,
-                letterSpacing: 2.0,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 30,
+                letterSpacing: 3,
               ),
             ),
             const SizedBox(height: 10.0),
             Text(
               paymentInfo['name'] ?? 'No name available',
               style: TextStyle(
-                color: Colors.amberAccent[200],
-                fontWeight: FontWeight.bold,
-                fontSize: 28.0,
-                letterSpacing: 2.0,
+                color: Colors.black,
+                fontSize: 25,
+                letterSpacing: 3,
               ),
             ),
             const SizedBox(height: 10.0),
             const Text(
               'EVENT',
               style: TextStyle(
-                color: Colors.grey,
-                letterSpacing: 2.0,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 30,
+                letterSpacing: 3,
               ),
             ),
             const SizedBox(height: 10.0),
             Text(
               paymentInfo['event'] ?? 'No event payed for',
               style: TextStyle(
-                color: Colors.amberAccent[200],
-                fontWeight: FontWeight.bold,
-                fontSize: 28.0,
-                letterSpacing: 2.0,
+                color: Colors.black,
+                fontSize: 25,
+                letterSpacing: 3,
               ),
             ),
             const SizedBox(height: 10.0),
             const Text(
               'VIP STATUS',
               style: TextStyle(
-                color: Colors.grey,
-                letterSpacing: 2.0,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 30,
+                letterSpacing: 3,
               ),
             ),
             const SizedBox(height: 10.0),
             Text(
               paymentInfo['vipStatus'] ?? 'Unknown',
               style: TextStyle(
-                color: Colors.amberAccent[200],
+                color: Colors.red,
                 fontWeight: FontWeight.bold,
-                fontSize: 28.0,
-                letterSpacing: 2.0,
+                fontSize: 25,
+                letterSpacing: 3,
               ),
             ),
           ],

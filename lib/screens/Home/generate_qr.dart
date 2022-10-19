@@ -81,7 +81,13 @@ class QrCodeScanner extends StatelessWidget {
                     }
                   }
                 }),
-            const SizedBox(height: 25)
+            const SizedBox(height: 25),
+            Center(
+              child: Text(
+                'This qr code is what u will use to enter the event and so should be kept carefully',
+                style: TextStyle(color: Colors.grey),
+              ),
+            )
           ],
         ),
       ),

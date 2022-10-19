@@ -23,6 +23,39 @@ class PaymentClarity extends StatefulWidget {
 
 class _PaymentClarityState extends State<PaymentClarity> {
   bool loading = false;
+  bool vipSlots = true;
+
+  @override
+  void initState() {
+    super.initState();
+    checkVipSlots();
+  }
+
+  checkVipSlots() async {
+    await vipSlotChecker();
+  }
+
+  vipSlotChecker() async {
+    DocumentSnapshot<Map<String, dynamic>> docRef = await FirebaseFirestore
+        .instance
+        .collection('Events')
+        .doc('${widget.eventData['id']}')
+        .get();
+    Map<String, dynamic> doc = fromDocumentSnapshot(docRef);
+    if (doc['vipSlots'] == "" || doc['vipPrice'] == "") {
+      setState(() {
+        vipSlots = false;
+      });
+    }
+  }
+
+  fromDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> snapshot) {
+    Map<String, dynamic> data = {
+      'vipSlots': snapshot['vipSlots'],
+      'vipPrice': snapshot['vipPrice'],
+    };
+    return data;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,44 +99,48 @@ class _PaymentClarityState extends State<PaymentClarity> {
                   ),
                   body: Column(
                     children: <Widget>[
-                      Container(
-                        height: 50.0,
-                        child: Material(
-                          borderRadius: BorderRadius.circular(20.0),
-                          shadowColor: Colors.greenAccent,
-                          color: Colors.blueGrey,
-                          elevation: 7.0,
-                          child: InkWell(
-                            onTap: () async {
-                              loading = true;
-                              final userData = await FirebaseFirestore.instance
-                                  .collection('UserData')
-                                  .doc(user.uid)
-                                  .get();
-                              loading = false;
-                              var data = userData.data();
-                              var profpic = data?['profpic'];
-                              var name = data?['name'];
-                              if (profpic == null || name == null) {
-                                _showAdditionalDataForm();
-                              } else {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => BookingScreen(
-                                              eventData: widget.eventData,
-                                            )));
-                              }
-                            },
-                            child: const Center(
-                              child: Text('Pay for VIP',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold)),
+                      if (vipSlots) ...[
+                        Container(
+                          height: 50.0,
+                          child: Material(
+                            borderRadius: BorderRadius.circular(20.0),
+                            shadowColor: Colors.greenAccent,
+                            color: Colors.blueGrey,
+                            elevation: 7.0,
+                            child: InkWell(
+                              onTap: () async {
+                                loading = true;
+                                final userData = await FirebaseFirestore
+                                    .instance
+                                    .collection('UserData')
+                                    .doc(user.uid)
+                                    .get();
+                                loading = false;
+                                var data = userData.data();
+                                var profpic = data?['profpic'];
+                                var name = data?['name'];
+                                if (profpic == null || name == null) {
+                                  _showAdditionalDataForm();
+                                } else {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => BookingScreen(
+                                                eventData: widget.eventData,
+                                              )));
+                                }
+                              },
+                              child: const Center(
+                                child: Text('Pay for VIP',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold)),
+                              ),
                             ),
                           ),
                         ),
-                      ),
+                      ] else
+                        ...[],
                       const SizedBox(
                         height: 50.0,
                       ),
@@ -129,7 +166,7 @@ class _PaymentClarityState extends State<PaymentClarity> {
                                   .get();
                               int ordinarySlots =
                                   int.parse(event.data()?['ordinarySlots']);
-                              if (ordinarySlots == null || ordinarySlots <= 0) {
+                              if (ordinarySlots <= 0) {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(const SnackBar(
                                   content: Text(
@@ -196,8 +233,15 @@ class _PaymentClarityState extends State<PaymentClarity> {
                                               .collection('Events')
                                               .doc(eventUid)
                                               .update({
-                                            'ordinarySlots': ordinarySlots - 1,
+                                            'ordinarySlots':
+                                                (ordinarySlots - 1) as String,
                                           });
+                                          FirebaseFirestore.instance
+                                              .collection('Cart')
+                                              .doc(user.uid)
+                                              .collection('PersonalCart')
+                                              .doc(widget.eventData['name'])
+                                              .delete();
                                           Map<String, dynamic> paymentDetails =
                                               {
                                             'name': name,
@@ -219,6 +263,12 @@ class _PaymentClarityState extends State<PaymentClarity> {
                                                 Text("${response.message}"),
                                           ));
                                         } else {
+                                          FirebaseFirestore.instance
+                                              .collection('Cart')
+                                              .doc(user.uid)
+                                              .collection('PersonalCart')
+                                              .doc(widget.eventData['name'])
+                                              .delete();
                                           Map<String, dynamic> paymentDetails =
                                               {
                                             'name': name,

@@ -29,9 +29,9 @@ class _EventUploadFormState extends State<EventUploadForm> {
   final now = DateTime.now();
   bool loading = false;
   String _ordinarySlots = '0';
-  String _vipSlots = '0';
+  String? _vipSlots;
   String _ordinaryPrice = '0';
-  String _vipPrice = '0';
+  String? _vipPrice;
 
   @override
   Widget build(BuildContext context) {
@@ -129,11 +129,8 @@ class _EventUploadFormState extends State<EventUploadForm> {
                     ),
                     TextFormField(
                         decoration: textInputDecoration.copyWith(
-                            hintText: 'Number of VIP Seats'),
+                            hintText: 'Number of VIP Seats (Optional)'),
                         keyboardType: TextInputType.number,
-                        validator: (val) => val!.isEmpty
-                            ? 'Please enter the number of VIP slots'
-                            : null,
                         onChanged: (val) {
                           setState(() {
                             _vipSlots = val;
@@ -144,11 +141,8 @@ class _EventUploadFormState extends State<EventUploadForm> {
                     ),
                     TextFormField(
                         decoration: textInputDecoration.copyWith(
-                            hintText: 'Price for VIP in Ugx'),
+                            hintText: 'Price for VIP in Ugx (Optional)'),
                         keyboardType: TextInputType.number,
-                        validator: (val) => val!.isEmpty
-                            ? 'Please enter a Price for VIPs'
-                            : null,
                         onChanged: (val) {
                           setState(() {
                             _vipPrice = val;
@@ -218,6 +212,11 @@ class _EventUploadFormState extends State<EventUploadForm> {
                       ),
                     ),
                     const SizedBox(
+                      height: 10.0,
+                    ),
+                    Text("Event won't upload without a cover",
+                        style: TextStyle(color: Colors.red)),
+                    const SizedBox(
                       height: 20.0,
                     ),
                     FloatingActionButton(
@@ -237,11 +236,9 @@ class _EventUploadFormState extends State<EventUploadForm> {
                               ordinaryPrice: _ordinaryPrice,
                               ordinarySlots: _ordinarySlots,
                               vipSlots: _vipSlots);
-                          // ignore: use_build_context_synchronously
                           setState(() {
                             loading = false;
                           });
-                          // ignore: use_build_context_synchronously
                           Navigator.pop(context);
                         }
                       },

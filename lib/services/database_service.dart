@@ -24,9 +24,9 @@ class DatabaseService {
     required String owner,
     required String location,
     required String ordinaryPrice,
-    required String vipPrice,
+    String? vipPrice,
     required String ordinarySlots,
-    required String vipSlots,
+    String? vipSlots,
   }) async {
     try {
       //Reference to our event on cloud firestore
