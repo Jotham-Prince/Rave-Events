@@ -38,7 +38,7 @@ class QrCodeScanner extends StatelessWidget {
                       SizedBox(
                         height: 10.0,
                       ),
-                      QrImage(
+                      QrImageView(
                         data: encodedJson,
                         size: 250,
                         backgroundColor: Colors.white,

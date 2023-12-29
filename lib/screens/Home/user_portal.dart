@@ -48,8 +48,8 @@ class UserPortal extends StatelessWidget {
                     Center(
                       child: CircleAvatar(
                         radius: 40.0,
-                        backgroundImage: NetworkImage(snapshot.data!
-                                .data()!['profpic'] ??
+                        backgroundImage: NetworkImage(snapshot.data
+                                ?.data()?['profpic'] ??
                             'https://www.pngitem.com/pimgs/m/504-5040528_empty-profile-picture-png-transparent-png.png'),
                       ),
                     ),
@@ -66,7 +66,7 @@ class UserPortal extends StatelessWidget {
                     ),
                     const SizedBox(height: 10.0),
                     Text(
-                      snapshot.data!.data()!['name'] ?? 'No name available',
+                      snapshot.data?.data()?['name'] ?? 'No name available',
                       style: TextStyle(
                         color: Color.fromARGB(255, 52, 252, 59),
                         fontWeight: FontWeight.bold,
